@@ -1,0 +1,77 @@
+angular.module('angular-rails-seo', [])
+
+  .run(["$seo", function($seo) {
+      return $seo.setRoutes(<%= Rails.configuration.seo.to_json %>);
+  }])
+
+  .factory("$seo", ["$location", "$rootScope", function($location, $rootScope) {
+    var $seo, paths;
+
+    return $seo = (function() {
+      function $seo() {}
+
+      // Applies the passed SEO hash to the current page
+      $seo.applyData = function(data) {
+        if (!data.dynamic) {
+          $seo.setTitle(data.title);
+        }
+      };
+
+      // Returns the default SEO entry
+      $seo.getDefault = function() {
+        return paths["default"];
+      };
+
+      // Finds the matching SEO entry for the given path, or returns default if
+      // none is found
+      $seo.match = function(path) {
+        var key, _i, _len, _ref;
+        if (path != null) {
+          _ref = Object.keys(paths);
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            key = _ref[_i];
+            if (paths[key].regex.test(path)) {
+              return paths[key];
+            }
+          }
+          return $seo.getDefault();
+        }
+      };
+
+      // Shows data as corresponds to path. If data is set to dynamic, no data
+      // will be set as it's expected that the user will do it manually
+      $seo.setPath = function(path) {
+        var data;
+        data = $seo.match(path);
+        if (data != null) {
+          $seo.applyData(data);
+        } else {
+          $seo.applyData($seo.getDefault());
+        }
+      };
+
+      // Assigns the routes as defined in seo.json
+      $seo.setRoutes = function(data) {
+        var key, _i, _len, _ref;
+        paths = data;
+        _ref = Object.keys(paths);
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          key = _ref[_i];
+          paths[key].regex = new RegExp(paths[key].regex);
+        }
+        $rootScope.$on('$locationChangeStart', function(e, next, current) {
+          $seo.setPath(next);
+        });
+      };
+
+      // Sets the page title, and provides a handle to it on the scope so that
+      // the page name can be inserted into views
+      $seo.setTitle = function(title) {
+        $rootScope.pageTitle = title;
+        angular.element("title").text(title);
+      };
+
+      return $seo;
+
+    })();
+  }]);
