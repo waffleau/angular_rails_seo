@@ -61,4 +61,4 @@ This will create a `<title>` field, a `<meta name="description">` field and a `<
 
 
 ### AngularJS
-Using sprockets, import `//= require "angular-rails-seo", and then load the module `angular-rails-seo`. All routing information will then be automatically applied.
+Using sprockets, import `//= require "angular-rails-seo"`, and then load the module `angular-rails-seo`. All routing information will then be automatically applied.

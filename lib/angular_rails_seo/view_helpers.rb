@@ -38,7 +38,7 @@ module AngularRailsSeo
     ##
     # Title tag
     def seo_title
-      content_tag :title, seo_data["title"]
+      content_tag :title, seo_data["title"], "ng-bind" => "pageTitle"
     end
 
   end

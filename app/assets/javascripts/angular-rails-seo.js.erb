@@ -12,7 +12,7 @@ angular.module('angular-rails-seo', [])
 
       // Applies the passed SEO hash to the current page
       $seo.applyData = function(data) {
-        if (!data.dynamic) {
+        if (!data.exclude) {
           $seo.setTitle(data.title);
         }
       };
@@ -38,7 +38,7 @@ angular.module('angular-rails-seo', [])
         }
       };
 
-      // Shows data as corresponds to path. If data is set to dynamic, no data
+      // Shows data as corresponds to path. If data is set to exclude, no data
       // will be set as it's expected that the user will do it manually
       $seo.setPath = function(path) {
         var data;
@@ -68,7 +68,6 @@ angular.module('angular-rails-seo', [])
       // the page name can be inserted into views
       $seo.setTitle = function(title) {
         $rootScope.pageTitle = title;
-        angular.element("title").text(title);
       };
 
       return $seo;
