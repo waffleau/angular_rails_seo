@@ -3,7 +3,7 @@
 ## Introduction
 One of the greatest pains of working with client-side frameworks is developing an effective SEO strategy, as page crawlers generally don't load javascript. To resolve this you usually need to write some form of server hack to deliver different content when visited by a crawler.
 
-This gem aims to make working with AngularJS within the Rails asset pipeline a little bit easier. It by provides a unified method of sharing page metadata between the server and client application.
+This gem aims to make working with AngularJS within the Rails asset pipeline a little bit easier. It provides a unified method of sharing page metadata between the server and client application.
 
 ## Getting started
 
@@ -41,7 +41,7 @@ This file has the following basic structure:
 
     }
 
-The keys in this JSON file are the path that they apply to. In order:
+Each key corresponds to a route within your application. An explanation of the functionality offered:
 
 1. `default`: The fallback values to use on pages without specific definitions.
 2. `/projects`: Will apply to the /projects path, and no child paths.
@@ -61,4 +61,4 @@ This will create a `<title>` field, a `<meta name="description">` field and a `<
 
 
 ### AngularJS
-All you need to do is require the module `angular-rails-seo`. All routing information will then be automatically applied.
+Using sprockets, import `//= require "angular-rails-seo", and then load the module `angular-rails-seo`. All routing information will then be automatically applied.
