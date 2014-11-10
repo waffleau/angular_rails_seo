@@ -38,7 +38,7 @@ module AngularRailsSeo
       end
 
       begin
-        response = klass.send_method(:seo_match, matchdata)
+        response = klass.send(:seo_match, matchdata)
       rescue
         logger.warn "SEO: couldn't call seo_match method of #{class_name}"
         return nil
