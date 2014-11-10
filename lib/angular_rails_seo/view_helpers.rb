@@ -13,7 +13,7 @@ module AngularRailsSeo
             fallback = data["parent"].blank? ? seo_default : seo_default.merge(Rails.configuration.seo[data["parent"]])
 
             unless data["model"].blank?
-              response = seo_dynamic(data["model"])
+              response = seo_dynamic(data["model"], regex[1..(regex.size - 1)])
               data = response.nil? ? {} : response
             end
 
@@ -29,7 +29,7 @@ module AngularRailsSeo
       Rails.configuration.seo["default"]
     end
 
-    def seo_dynamic(class_name)
+    def seo_dynamic(class_name, matchdata)
       begin
         klass = class_name.constantize
       rescue
@@ -38,7 +38,7 @@ module AngularRailsSeo
       end
 
       begin
-        response = klass.send_method(:seo_match, regex[1..(regex.size - 1)])
+        response = klass.send_method(:seo_match, matchdata)
       rescue
         logger.warn "SEO: couldn't call seo_match method of #{class_name}"
         return nil
