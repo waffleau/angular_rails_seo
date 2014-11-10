@@ -8,6 +8,7 @@ This gem aims to make working with AngularJS within the Rails asset pipeline a l
 
 ## History
 1.0.0: Initial release
+
 1.1.0: Dynamic path matching and parent assignment
 
 
@@ -52,7 +53,7 @@ Each key corresponds to a route within your application. An explanation of the f
 
 1. `default`: The fallback values to use on pages without specific definitions.
 2. `/projects`: Will apply to the /projects path, and no child paths.
-3. `/projects/*`: The `*` is a wildcard, so this path represents any direct child path of /projects - e.g. /projects/my-first-project. The `model` attribute means that this path is dynamic, and in this case the gem should look at the Project model to resolve the SEO data. This is explained further below. The `parent` attribute tells this entry which data to inherit for missing fields. In this example, individual project pages will use the `/projects` meta description.
+3. `/projects/*`: The `*` is a wildcard, so this path represents any direct child path of `/projects` - e.g. `/projects/my-first-project`. The `model` attribute means that this path is dynamic, and in this case the gem should look at the Project model to resolve the SEO data. This is explained further below. The `parent` attribute tells this entry which data to inherit for missing fields. In this example, individual project pages will use the `/projects` meta description.
 4. `/users`: Another example of a single matched page. The description will be the same as the "default" description.
 5. `/users/*`: Will match any direct child of /users, but explictly not apply the "default" settings. Use this if you want to dynamically name this page at runtime.
 
@@ -82,4 +83,4 @@ The hash returned from this method will then be treated as a normal seo.json ent
 ### AngularJS
 Using sprockets, import `//= require "angular-rails-seo"`, and then load the module `angular-rails-seo`. All routing information will then be automatically applied.
 
-If you want to set a custom title for a page, you can inject the `$seo` service into your controller, then use `$seo.setTitle("This is a custom title")`. There is a gotcha though: if you've defined an SEO title for the matching entry, it will be the one used. To avoid this, you need to use either the `model` or `exclude` attributes.
+If you want to set a custom title for a page, you can inject the `$seo` service into your controller, then use `$seo.setTitle("This is a custom title");`. There is a gotcha: if you've defined a title in seo.json for this path, it will be treated with priority. To avoid this, you need to use either the `model` or `exclude` attribute.
