@@ -5,10 +5,12 @@ module AngularRailsSeo
     initializer "angular_rails_seo.configure_rails_initialization" do
       begin
         file = File.read("#{Rails.root}/seo.json")
-
         seo = JSON.parse(file)
-        seo.default = seo["default"]
-        seo.each_pair { |k, v| v["regex"] = "#{Regexp.quote(k).gsub('\*', "([^/]+)")}$" }
+
+        seo.each_pair do |k,v|
+          seo[k] = ActiveSupport::HashWithIndifferentAccess.new(v)
+          seo[k][:regex] = "#{Regexp.quote(k).gsub('\*', "([^/]+)")}$"
+        end
 
         Rails.configuration.seo = seo
       rescue => e
