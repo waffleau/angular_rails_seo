@@ -12,7 +12,7 @@ angular.module('angular-rails-seo', [])
 
       // Applies the passed SEO hash to the current page
       $seo.applyData = function(data) {
-        if (!data.exclude) {
+        if (!data.exclude && data.title != null) {
           $seo.setTitle(data.title);
         }
       };
@@ -20,6 +20,11 @@ angular.module('angular-rails-seo', [])
       // Returns the default SEO entry
       $seo.getDefault = function() {
         return paths["default"];
+      };
+
+      // Return an object containing all routing information
+      $seo.getRoutes = function() {
+        return paths;
       };
 
       // Finds the matching SEO entry for the given path, or returns default if

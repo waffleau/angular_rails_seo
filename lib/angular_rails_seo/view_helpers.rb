@@ -2,19 +2,49 @@ module AngularRailsSeo
   module ViewHelpers
 
     ##
-    # Returns SEO data as defined in initializes/seo.rb
+    # Returns SEO data as defined in in seo.json
     def seo_data
-      Rails.configuration.seo.each do |key, value|
-        unless Regexp.new(value["regex"]).match(request.path).nil?
-          return seo_default.merge(Rails.configuration.seo[key])
+      if @seo_data.nil?
+        Rails.configuration.seo.each do |key, value|
+          regex = Regexp.new(value["regex"]).match(request.path)
+
+          unless regex.nil?
+            data = Rails.configuration.seo[key]
+            fallback = data["parent"].blank? ? seo_default : seo_default.merge(Rails.configuration.seo[data["parent"]])
+
+            unless data["model"].blank?
+              response = seo_dynamic(data["model"])
+              data = response.nil? ? {} : response
+            end
+
+            @seo_data = fallback.merge(data)
+          end
         end
       end
 
-      seo_default
+      @seo_data ||= seo_default
     end
 
     def seo_default
       Rails.configuration.seo["default"]
+    end
+
+    def seo_dynamic(class_name)
+      begin
+        klass = class_name.constantize
+      rescue
+        logger.warn "SEO: unable to retrieve SEO data for #{class_name}"
+        return nil
+      end
+
+      begin
+        response = klass.send_method(:seo_match, regex[1..(regex.size - 1)])
+      rescue
+        logger.warn "SEO: couldn't call seo_match method of #{class_name}"
+        return nil
+      end
+
+      return response
     end
 
     ##

@@ -8,7 +8,7 @@ module AngularRailsSeo
 
         seo = JSON.parse(file)
         seo.default = seo["default"]
-        seo.each_pair { |k, v| v["regex"] = "#{Regexp.quote(k).gsub('\*', "(.*?)")}$" }
+        seo.each_pair { |k, v| v["regex"] = "#{Regexp.quote(k).gsub('\*', "([^/]+)")}$" }
 
         Rails.configuration.seo = seo
       rescue => e
