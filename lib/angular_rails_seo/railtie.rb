@@ -9,7 +9,7 @@ module AngularRailsSeo
 
         seo.each_pair do |k,v|
           seo[k] = ActiveSupport::HashWithIndifferentAccess.new(v)
-          seo[k][:regex] = "#{Regexp.quote(k).gsub('\*', "([^/]+)")}$"
+          seo[k][:regex] = "^#{Regexp.quote(k).gsub('\*', "([^/]+)")}$"
         end
 
         Rails.configuration.seo = seo
