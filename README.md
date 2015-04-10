@@ -11,6 +11,8 @@ This gem aims to make working with AngularJS within the Rails asset pipeline a l
 
 1.1.0: Dynamic path matching and parent assignment
 
+1.1.5: Fixes to JS pathmatching
+
 
 ## Getting started
 
