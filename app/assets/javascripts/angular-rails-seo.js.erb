@@ -27,45 +27,52 @@ angular.module('angular-rails-seo', [])
         return paths;
       };
 
-      // Finds the matching SEO entry for the given path, or returns default if
-      // none is found
+      // Finds the matching SEO entry for the current path, or returns the default if none is found
       $seo.match = function(path) {
-        var key, _i, _len, _ref;
-        if (path != null) {
-          _ref = Object.keys(paths);
-          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-            key = _ref[_i];
-            if (paths[key].regex.test(path)) {
-              return paths[key];
-            }
-          }
-          return $seo.getDefault();
+        var path = $location.path();
+        var pathKeys = Object.keys(paths);
+        var key, i;
+
+        if (path == null) {
+          return $seo.getDefaults();
         }
+
+        for (var i = 0; i < pathKeys.length; i++) {
+          key = pathKeys[i];
+
+          if (paths[key].regex.test(path)) {
+            return paths[key];
+          }
+        }
+
+        return $seo.getDefault();
       };
 
-      // Shows data as corresponds to path. If data is set to exclude, no data
-      // will be set as it's expected that the user will do it manually
-      $seo.setPath = function(path) {
-        var data;
-        data = $seo.match(path);
+      // If we found a matching path entry apply it, otherwise use the default
+      $seo.refresh = function() {
+        var data = $seo.match();
+
         if (data != null) {
           $seo.applyData(data);
         } else {
           $seo.applyData($seo.getDefault());
         }
-      };
+      }
 
       // Assigns the routes as defined in seo.json
       $seo.setRoutes = function(data) {
-        var key, _i, _len, _ref;
         paths = data;
-        _ref = Object.keys(paths);
-        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-          key = _ref[_i];
+
+        var key;
+        var pathKeys = Object.keys(paths);
+
+        for (var i = 0; i < pathKeys.length; i++) {
+          key = pathKeys[i];
           paths[key].regex = new RegExp(paths[key].regex);
         }
+
         $rootScope.$on('$locationChangeStart', function(e, next, current) {
-          $seo.setPath(next);
+          $seo.refresh();
         });
       };
 
