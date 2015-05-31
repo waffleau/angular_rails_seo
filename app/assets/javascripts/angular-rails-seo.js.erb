@@ -29,12 +29,11 @@ angular.module('angular-rails-seo', [])
 
       // Finds the matching SEO entry for the current path, or returns the default if none is found
       $seo.match = function(path) {
-        var path = $location.path();
         var pathKeys = Object.keys(paths);
         var key, i;
 
         if (path == null) {
-          return $seo.getDefaults();
+          return $seo.getDefault();
         }
 
         for (var i = 0; i < pathKeys.length; i++) {
@@ -50,7 +49,8 @@ angular.module('angular-rails-seo', [])
 
       // If we found a matching path entry apply it, otherwise use the default
       $seo.refresh = function() {
-        var data = $seo.match();
+        var path = $location.path();
+        var data = $seo.match(path);
 
         if (data != null) {
           $seo.applyData(data);
@@ -71,11 +71,7 @@ angular.module('angular-rails-seo', [])
           paths[key].regex = new RegExp(paths[key].regex);
         }
 
-        $rootScope.$on('$routeChangeStart', function(e, next, current) {
-          $seo.refresh();
-        });
-
-        $rootScope.$on('$stateChangeStart', function(e, next, current) {
+        $rootScope.$on('$locationChangeSuccess', function(e, next, current) {
           $seo.refresh();
         });
       };
