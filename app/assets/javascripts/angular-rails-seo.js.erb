@@ -71,7 +71,11 @@ angular.module('angular-rails-seo', [])
           paths[key].regex = new RegExp(paths[key].regex);
         }
 
-        $rootScope.$on('$locationChangeStart', function(e, next, current) {
+        $rootScope.$on('$routeChangeStart', function(e, next, current) {
+          $seo.refresh();
+        });
+
+        $rootScope.$on('$stateChangeStart', function(e, next, current) {
           $seo.refresh();
         });
       };
